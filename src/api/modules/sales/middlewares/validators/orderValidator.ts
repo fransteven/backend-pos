@@ -2,6 +2,7 @@ import { body } from "express-validator"
 
 export const createOrderValidation = [
     body('discount')
+        .optional()
         .isInt({ min: 1, max: 100 })
         .withMessage('El descuento debe ser un valor entero entre 1 y 100'),
     body('paymentMethod')

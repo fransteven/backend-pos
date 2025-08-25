@@ -15,7 +15,7 @@ export class Order extends Model{
 
     @Column({
         type: DataType.DECIMAL(10, 2),
-        defaultValue: 0,
+        defaultValue: 0
     })
     declare discount: number;
 

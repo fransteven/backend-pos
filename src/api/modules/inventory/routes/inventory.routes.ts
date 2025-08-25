@@ -1,6 +1,6 @@
 import { Router } from "express";
-import { CategoryController, LocationController, ProductController } from "../controllers/ProductController";
-import { createCategoryValidation, createLocationValidation, createProductValidation, updateCategoryValidation, updateLocationValidation,  updateProductValidation,  validateId } from "../middlewares/validators/productValidator";
+import { CategoryController, LocationController, ProductController, StockController } from "../controllers/ProductController";
+import { createCategoryValidation, createLocationValidation, createMovementValidator, createProductValidation, updateCategoryValidation, updateLocationValidation,  updateProductValidation,  validateId } from "../middlewares/validators/productValidator";
 import { handleInputErrors, validateUniqueName } from "../../../middlewares/validation";
 import Location from "../models/Location";
 import { validateObjectIdExist } from "../../../middlewares/validation";
@@ -85,10 +85,22 @@ router.delete('/products/:id',
     validateObjectIdExist(Product),
     ProductController.delete);
 
+//Stock
+router.get('/stock',
+    StockController.getAll
+)
+
+
 //Movimientos del inventario
 
+router.get('/movements',
+    MovementController.getAll
+)
 router.post('/movements',
-
+    createMovementValidator,
+    handleInputErrors,
     MovementController.create
 )
+
+
 export default router

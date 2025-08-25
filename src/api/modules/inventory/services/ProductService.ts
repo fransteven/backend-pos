@@ -1,10 +1,14 @@
+import { Model } from "sequelize-typescript";
 import Category from "../models/Category";
 import Location from "../models/Location";
 import Product from "../models/Product";
+import StockLocation from "../models/StockLocation";
 
 export class CategoryService {
     static async getAll() {
-        return await Category.findAll();
+        return await Category.findAll({
+            order: [['createdAt', 'DESC']]
+        });
     }
 
     static async getById(id: number) {
@@ -12,16 +16,14 @@ export class CategoryService {
     }
 
     static async create(name: string) {
-
         const normalizedName = name.toLocaleLowerCase()
-
-        return await Category.create({ name:normalizedName });
+        return await Category.create({ name: normalizedName });
     }
 
     static async update(id: number, name: string) {
         const category = await Category.findByPk(id);
         const normalizedName = name.toLocaleLowerCase()
-        return await category.update({ name:normalizedName });
+        return await category.update({ name: normalizedName });
     }
 
     static async delete(id: number) {
@@ -32,7 +34,9 @@ export class CategoryService {
 }
 export class LocationService {
     static async getAll() {
-        return await Location.findAll();
+        return await Location.findAll({
+            order: [['createdAt', 'DESC']]
+        });
     }
 
     static async getById(id: number) {
@@ -43,13 +47,13 @@ export class LocationService {
 
         const normalizedName = name.toLocaleLowerCase()
 
-        return await Location.create({ name:normalizedName });
+        return await Location.create({ name: normalizedName });
     }
 
     static async update(id: number, name: string) {
         const location = await Location.findByPk(id);
         const normalizedName = name.toLocaleLowerCase()
-        return await location.update({ name:normalizedName });
+        return await location.update({ name: normalizedName });
     }
 
     static async delete(id: number) {
@@ -60,7 +64,13 @@ export class LocationService {
 }
 export class ProductService {
     static async getAll() {
-        return await Product.findAll();
+        return await Product.findAll({
+            include: [{
+                model: Category,
+                attributes: ['id', 'name']
+            }],
+            order: [['createdAt', 'DESC']]
+        });
     }
 
     static async getById(id: number) {
@@ -82,3 +92,21 @@ export class ProductService {
         return { message: 'Producto eliminado' };
     }
 }
+
+export class StockService {
+    static async getAll() {
+        return await StockLocation.findAll({
+            attributes:['id','quantity'],
+            include: [
+            {
+                model:Product,
+                attributes:['id','name','sale_price']
+            },
+            {
+                model:Location,
+                attributes:['id','name']
+            },
+            ]
+        });
+    }
+}   

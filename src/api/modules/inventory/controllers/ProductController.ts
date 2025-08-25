@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
-import { CategoryService, LocationService, ProductService } from "../services/ProductService";
-
-
+import { CategoryService, LocationService, ProductService, StockService } from "../services/ProductService";
 
 export class CategoryController {
     static async getAll(req: Request, res: Response) {
@@ -15,21 +13,20 @@ export class CategoryController {
     }
 
     static async create(req: Request, res: Response) {
-
         try {
             const { name } = req.body;
             const category = await CategoryService.create(name);
-            res.status(201).json(category);
-        } catch (error:any) {
+            res.status(201).json('Categoría creada correctamente');
+        } catch (error: any) {
             res.status(400).json({ error: error.message });
-        }   
+        }
 
     }
 
     static async update(req: Request, res: Response) {
         const { name } = req.body;
         const category = await CategoryService.update(Number(req.params.id), name);
-        res.json(category);
+        res.json({ message: 'Categoría actualizada correctamente' });
     }
 
     static async delete(req: Request, res: Response) {
@@ -37,8 +34,7 @@ export class CategoryController {
         res.json(result);
     }
 }
-
-export class LocationController{
+export class LocationController {
     static async getAll(req: Request, res: Response) {
         const locations = await LocationService.getAll();
         res.json(locations);
@@ -53,8 +49,8 @@ export class LocationController{
         try {
             const { name } = req.body;
             const location = await LocationService.create(name);
-            res.status(201).json(location);
-        } catch (error:any) {
+            res.status(201).json({ message: "Locación creada correctamente!" });
+        } catch (error: any) {
             res.status(400).json({ error: error.message });
         }
     }
@@ -62,7 +58,7 @@ export class LocationController{
     static async update(req: Request, res: Response) {
         const { name } = req.body;
         const location = await LocationService.update(Number(req.params.id), name);
-        res.json(location);
+        res.json({ message: 'Locación actualizada correctamente.' });
     }
 
     static async delete(req: Request, res: Response) {
@@ -70,7 +66,7 @@ export class LocationController{
         res.json(result);
     }
 }
-export class ProductController{
+export class ProductController {
     static async getAll(req: Request, res: Response) {
         const products = await ProductService.getAll();
         res.json(products);
@@ -83,21 +79,39 @@ export class ProductController{
 
     static async create(req: Request, res: Response) {
         try {
-            console.log(req.body)
             const product = await ProductService.create(req.body);
-            res.status(201).json(product);
-        } catch (error:any) {
+            if (product) {
+                res.status(201).json('Producto creado correctamente!.');
+            }
+        } catch (error: any) {
             res.status(400).json({ error: error.message });
         }
     }
 
     static async update(req: Request, res: Response) {
-        const product = await ProductService.update(Number(req.params.id), req.body);
-        res.json(product);
+        try {
+            const product = await ProductService.update(Number(req.params.id), req.body);
+            res.json('Producto actualizado correctamente!');
+
+        } catch (error) {
+            res.status(400).json({ error: error.message })
+        }
+
     }
 
     static async delete(req: Request, res: Response) {
-        const result = await ProductService.delete(Number(req.params.id));
-        res.json(result);
+        try {
+            const result = await ProductService.delete(Number(req.params.id));
+            res.json(result);
+        } catch (error) {
+            res.status(400).json({ error: error.message })
+        }
+
+    }
+}
+export class StockController {
+    static async getAll(req: Request, res: Response) {
+        const stock = await StockService.getAll();
+        res.json(stock);
     }
 }

@@ -10,5 +10,8 @@ router.post('/orders',
     handleInputErrors,
     OrderController.create
 )
+router.get('/orders',
+    OrderController.getAll
+)
 
 export default router

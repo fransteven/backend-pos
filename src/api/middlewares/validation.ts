@@ -33,7 +33,6 @@ export const validateUniqueName = (model) => {
                 message: `El nombre '${name}' ya existe en ${model.name}`
             });
         }
-        
         next();
     };
 };
